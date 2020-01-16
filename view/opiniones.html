@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- LINKS DE BOOSTRAP -->
+    <link rel="stylesheet" href="css/css_boostrap/bootstrap.css">
+    <link rel="stylesheet" href="css/css_boostrap/bootstrap-grid.css">
+    <!-- LINK CSS NUESTRO -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/opiniones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Opiniones</title>
+</head>
+
+
+
+<body class="bg-danger text-white">
+
+    <!-- NAVBAR -->
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <img id="logo" src="img/escudo_APC.png"/>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="../index.html"><b>INICIO</b></a>
+                </li>
+                <li class="nav-item active">
+                  <a class="nav-link" href="equipos.html"><b>EQUIPOS</b></a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <b>SECCIONES</b>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item text-secondary" href="../index.html#galeria"><b>GALERIA</b></a>
+                      <a class="dropdown-item text-secondary" href="../index.html#top5"><b>TOP 5</b></a>
+                      <a class="dropdown-item text-secondary" href="../index.html#tienda"><b>TIENDA</b></a>
+                    </div>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link" style="color: black;" href="../opiniones.html"><b><u>RESEÑAS</u></b></a>
+                  </li>
+
+                <li class="nav-item active">
+                  <a class="nav-link" data-toggle="modal" href="#myModal"><b>CONTACTO</b></a>
+                </li>
+              </ul>
+        </div>
+      </nav>
+
+
+  <!-- MODAL DE CONTACTO -->
+
+  <div id="myModal" class="modal fade text-center" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content   carousel">
+        <div class="modal-header">
+          <h5 class="modal-title text-light">CONTACTA CON NOSOTROS</h5>
+          <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-dark">
+          <form>
+            <div class="form-row">
+              <div class="col-md-10 mb-3">
+                <input type="text" id="email" class="form-control" placeholder="Introduce tu email">
+              </div>
+              <div class="form-group col-md-10">
+                <textarea class="form-control" id="comentario" placeholder="Introduce tu reseña" rows="3"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="enviarOp" class="botones">Enviar</button>
+          <button type="button" class="botones" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+     <div class="row d-flex align-items-center justify-content-center m-3 opiniones">
+ 
+     </div>
+   
+     <!-- BANNER-->
+
+     <img id="banner" class="col-14" src="img/banner.png">
+
+     <!-- FOOTER -->
+     <div class="row footer col-14 d-flex align-items-center justify-content-center bg-secondary">
+       <div class="texto-info col-md-4">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+       </div>
+       <div class="social col-md-4" align="center">
+        <a href="https://www.instagram.com/albacetepetancaclub/?hl=es" target="_blank"><img src="img/insta.png"></a>
+        <a href="https://www.facebook.com/petancaclub.albacete.1" target="_blank"><img src="img/facebook.png"></a>
+        <a href="https://twitter.com/albacetepetanc1" target="_blank"><img src="img/twitter.png"></a>
+       </div>
+        <iframe class="mapa col-md-3" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24808.104622379622!2d-1.8780989968338722!3d38.99219789157474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd665fe2fb218d15%3A0x8269cd31d6186180!2sAlbacete!5e0!3m2!1ses!2ses!4v1575539217004!5m2!1ses!2ses" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+     </div>
+   
+</body>
+<!-- LINK DE JQUERY -->
+<script src="js/jquery.js"></script>
+
+<!-- LINK DE BOOSTRAP JS -->
+<script src="js/js_bootstrap/bootstrap.js"></script>
+
+<!-- LINK DE NUESTRO JS -->
+<!--<script src="js/sessionCheck.js"></script> -->
+<script src="js/opinion.js"></script>
+</html>

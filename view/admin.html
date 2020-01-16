@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html ng-app="miApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/admin.css">
+    <title>Admin</title>
+</head>
+
+<body>
+
+    <div ng-controller="miControlador" ng-show="ConAjax==='true'">
+        <div class="contenedor">
+            <a class="nav-link" ><button type="button" class="btn btn-light" id="logout"><b>CERRA SESION</b></button></a>
+            <legend>
+                <h1>Lista de Equipos</h1>
+            </legend>
+            <fieldset width="50%" height="50%">
+                <div class="tablas">
+                <table id="tablaEquipos">
+                    <tr>
+                        <td><b>EQUIPO </b></td>
+                        <td><b>NOMBRE</b></td>
+                    </tr>
+                    <tr id="listaEquipos" ng-repeat="item in lista | filter:TEXTObusqueda"
+                        ng-show="verTabla === 'true'">
+                        <td><b>{{item.idEquipo}}</b></td>
+                        <td class="nombreEquipo" data-id="{{item.idEquipo}}"><b>{{item.nombre}}</b></td>
+                        <!-- <td><input type="button" value="Modificar" ng-click="modificar(item)"></td> -->
+                    </tr>
+                </table>
+
+                <table id="tablaOpiniones">
+                    <tr>
+                        <td><b>EMAIL</b></td>
+                        <td><b>OPINION</b></td>
+                    </tr>
+                    <tr id="listaEquipos" ng-repeat="item in opiniones" ng-show="verTabla === 'true'">
+                        <td><b>{{item.email}}</b></td>
+                        <td data-id="{{item.idOpinion}}"><b>{{item.texto}}</b></td>
+                        <!-- <td><input type="button" value="Modificar" ng-click="modificar(item)"></td> -->
+                    </tr>
+                </table>
+            </div>
+
+                <div id="doha" ng-show="verMenu==='true'" ng-style="menu">
+                        <input type="button" class="botones" value="Buscar Equipo" ng-click="Buscar()">
+                        <input type="button" class="botones" value="Añadir Equipo" ng-click="EquipoNuevo()">
+                        <input type="button" class="botones" value="Añadir Jugador" ng-click="JugadorNuevo()">
+                        <input type="button" class="botones" value="Añadir Tecnico" ng-click="TecnicoNuevo()">
+                        <input type="button" class="botones" value="Eliminar Equipo" ng-click="EliminarEquipo()">
+                        <input type="button" class="botones" value="Eliminar Jugador" ng-click="EliminarJugador()">
+                        <input type="button" class="botones" value="Eliminar Tecnico" ng-click="EliminarTecnico()">
+    
+                    </div>
+    
+                    <!-- Busqueda de jugador -->
+                    <form id="formularioBusqueda" ng-show="buscarEquipo==='true'" ng-style="menu">
+                        <span>Escribe el nombre del Equipo</span> <input type="text" ng-model="TEXTObusqueda">
+                        <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                    </form>
+
+                    <div id="acciones">
+                        <div id=""><!-- Agregar Equipo -->
+                            <form id="formagregar" ng-submit="agregarEquipo()" ng-show="agregarEquipos==='true'">
+                                
+                                <span>Categoria</span> <select ng-model="misdatosEquipo.idCategoria" ng-options="item.idCategoria for item in categorias">
+                                    
+                                </select><br>
+                                <span>Nombre</span> <input type="text" ng-model="misdatosEquipo.nombreEquipo"><br>
+        
+                                <input type="submit" class="botones" value="Agregar Equipo">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+                        <div id=""><!-- Agregar Jugador -->
+                            <form id="formagregar" ng-submit="agregar_Jugador()" ng-show="agregarJugador==='true'">
+                                
+                                <span>Nombre del jugador</span> <input type="text" ng-model="misdatos.nombreJugador"><br>
+                                <br>
+                                <span>Equipo</span> <select ng-model="misdatosEquipo.idEquipo" ng-options="item.nombre for item in lista">
+                                        <option ng-repeat="item in lista" value="{{item.idEquipo}}">{{item.nombre}}</option>
+                                    </select>
+                                <br>
+        
+                                <input type="submit" class="botones" value="Agregar Jugador">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+                        <div id=""><!-- Agregar Tecnico -->
+                            <form id="formagregar" ng-submit="agregar_Tecnico()" ng-show="agregarTecnico==='true'">
+                                
+                                <span>Nombre de Tecnico</span> <input type="text" ng-model="misdatos.nombreTecnico"><br><br>
+                                <span>Licencia</span> <input type="text" ng-model="misdatos.licencia"><br>
+                                <span>Equipo</span> <select ng-model="misdatosEquipo.idEquipo" ng-options="item.nombre for item in lista">
+                                    <option ng-repeat="item in lista" value="{{item.idEquipo}}">{{item.nombre}}</option>
+                                </select>
+                            <br>
+        
+                                <input type="submit" class="botones" value="Agregar Tecnico">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+                        <div id=""><!-- Eliminar Equipo -->
+                            <form id="formagregar" ng-submit="eliminarEquipo()" ng-show="eliminarEquipos==='true'">
+                                
+                                <span>Equipo</span> <select ng-model="misdatosEquipo.idEquipo"  value="{{item.idEquipo}}" ng-options="item.nombre for item in lista"></select>
+                                    
+                                </select><br>
+        
+                                <input type="submit" class="botones" value="Eliminar Equipo">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+                        <div id=""><!-- Eliminar Jugador -->
+                            <form id="formagregar" ng-submit="eliminarJugador()" ng-show="eliminarJugadores==='true'">
+                                
+                                <span>Jugador</span> <select ng-model="misdatosJugador.idUsuario"  value="{{item.idUsuario}}" ng-options="item.nombre for item in jugadores"></select>
+                                    
+                                </select><br>
+        
+                                <input type="submit" class="botones" value="Eliminar Jugador">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+                        <div id=""><!-- Eliminar Tecnico -->
+                            <form id="formagregar" ng-submit="eliminarTecnico()" ng-show="eliminarTecnicos==='true'">
+                                
+                                <span>Tecnico</span> <select ng-model="misdatosTecnico.idUsuario"  value="{{item.idUsuario}}" ng-options="item.nombre for item in tecnicos"></select>
+                                    
+                                </select><br>
+        
+                                <input type="submit" class="botones" value="Eliminar Tecnico">
+                                <input type="button" class="botones" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+
+
+        
+                        <div id=""><!-- Modificar Equipo -->
+                            <form id="formmodificar" ng-submit="modificar()" ng-show="modificarEquipo==='true'">
+        
+                                <span>Nombre</span> <input type="text" ng-model="misdatos.nombre"><br>
+                                
+                                <input type="submit" class="botones" ng-click="finalizar()" value="Finalizar">
+                                <input type="button" ng-click="cancelar()" value="Cancelar">
+                            </form>
+                        </div>
+        
+        
+                        <button type="button" name="button" ng-click="aparecerTablaAjax()" id="botonAjax"
+                            ng-show="cargarTabla === 'si'">Cargar Tabla</button>
+                        
+                    </div>
+
+            </fieldset>
+        </div>
+
+
+    </div>
+</body>
+<!-- LINK DE ANGULARJS -->
+<script src="js/angular.min.js"></script>
+
+<!-- LINK DE JQUERY -->
+<script src="js/jquery.js"></script>
+
+<!-- LINK DE BOOSTRAP JS -->
+<script src="js/js_bootstrap/bootstrap.js"></script>
+
+<!-- LINK DE NUESTRO JS -->
+<!--<script src="js/sessionCheck.js"></script> -->
+<script src="js/admin.js"></script>
+
+</html>

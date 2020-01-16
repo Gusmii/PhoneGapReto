@@ -1,0 +1,2 @@
+mysql_secure passwd: albacete123
+MySQL application password for phpmyadmin: AlbacetePetanca1!
