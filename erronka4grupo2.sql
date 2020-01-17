@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-01-2020 a las 08:51:25
+-- Tiempo de generación: 17-01-2020 a las 13:41:01
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.1.32
 
@@ -99,9 +99,15 @@ FROM jugador
 WHERE jugador.idUsuario = vIdUsuario$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_jugador_con_mas_votos` ()  NO SQL
-SELECT idCategoria, idJugadorVotado, MAX(votos_recibidos) AS 'votos' FROM (SELECT  votos.idCategoria, votos.idJugadorVotado, COUNT(votos.idJugadorVotado) AS 'votos_recibidos'
-FROM votos
-GROUP BY votos.idJugadorVotado) as tb GROUP BY idCategoria$$
+SELECT jugador.fotoPerfil AS 'fotoPerfil', categoria.nombre AS 'categoria', jugador.nombre AS 'jugador',  MAX(votos_recibidos) AS 'votos' FROM (SELECT votos.idCategoria, votos.idJugadorVotado, COUNT(votos.idJugadorVotado) AS 'votos_recibidos'
+FROM votos  
+GROUP BY votos.idJugadorVotado) as tb
+JOIN jugador ON tb.idJugadorVotado=jugador.idJugador
+JOIN usuario ON jugador.idUsuario=usuario.idUsuario
+JOIN equipo ON usuario.idEquipo=equipo.idEquipo
+JOIN equipo_categoria ON equipo.idEquipo=equipo_categoria.idEquipo
+JOIN categoria ON equipo_categoria.idCategoria=categoria.idCategoria
+GROUP by tb.idCategoria$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_jugador_load` ()  NO SQL
 SELECT *
@@ -130,9 +136,14 @@ SELECT *
 FROM usuario
 WHERE usuario.idEquipo = vIdEquipo$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_votos_load` ()  NO SQL
+SELECT *
+FROM votos$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_votos_totales` (IN `vIdJugador` INT)  NO SQL
-SELECT COUNT(votos.idJugadorVotado)
+SELECT categoria.nombre AS 'categoria', COUNT(votos.idJugadorVotado) AS 'votos'
 FROM votos
+JOIN categoria ON votos.idCategoria = categoria.idCategoria
 WHERE votos.idJugadorVotado = vIdJugador$$
 
 --
@@ -275,21 +286,22 @@ CREATE TABLE `fotos_equipos` (
 CREATE TABLE `jugador` (
   `idJugador` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL
+  `nombre` varchar(50) NOT NULL,
+  `fotoPerfil` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'https://image.flaticon.com/icons/png/512/1685/1685087.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `jugador`
 --
 
-INSERT INTO `jugador` (`idJugador`, `idUsuario`, `nombre`) VALUES
-(1, 1, 'Carlos'),
-(2, 2, 'Bogdan'),
-(3, 3, 'Xabier'),
-(4, 8, 'Gusmano'),
-(5, 9, 'Jose'),
-(6, 10, 'Federico'),
-(7, 11, 'Julen');
+INSERT INTO `jugador` (`idJugador`, `idUsuario`, `nombre`, `fotoPerfil`) VALUES
+(1, 1, 'Carlos', 'https://scontent-mad1-1.cdninstagram.com/v/t51.2885-15/e35/73096340_147261636593369_2989453184324637307_n.jpg?_nc_ht=scontent-mad1-1.cdninstagram.com&_nc_cat=105&_nc_ohc=cnfKWF6wEJUAX8ack0o&oh=bb0d5012e6ded33eadb1f7d6914582d2&oe=5EA75E24'),
+(2, 2, 'Bogdan', 'https://image.flaticon.com/icons/png/512/1685/1685087.png'),
+(3, 3, 'Xabier', 'https://image.flaticon.com/icons/png/512/1685/1685087.png'),
+(4, 8, 'Gusmano', 'https://image.flaticon.com/icons/png/512/1685/1685087.png'),
+(5, 9, 'Jose', 'https://image.flaticon.com/icons/png/512/1685/1685087.png'),
+(6, 10, 'Federico', 'https://image.flaticon.com/icons/png/512/1685/1685087.png'),
+(7, 11, 'Julen', 'https://image.flaticon.com/icons/png/512/1685/1685087.png');
 
 -- --------------------------------------------------------
 
@@ -312,11 +324,11 @@ CREATE TABLE `opiniones` (
 INSERT INTO `opiniones` (`idOpinion`, `idUsuario`, `email`, `fecha`, `texto`) VALUES
 (2, 1, 'isla.carlos.99@gmail.com', '2019-12-18', 'Esto es la primera prueba correcta de insertar opiniones en la base de datos.'),
 (3, 2, 'eneko@gmail.com', '2019-12-18', 'Esta es la segunda prueba de insertar opiniones en la base de datos.'),
-(4, 3, 'gorka@gmail.com', '2019-12-18', '1 . 3.'),
+(4, 3, 'gorka@gmail.com', '2019-12-18', 'Esta es la cuarta prueba de insertar opiniones en la base de datos.'),
 (5, 5, 'isla.carlos.99@gmail.com', '2019-12-18', 'esta es la cuarta prueba de insertar opiniones en la base de datos.'),
 (6, 6, 'eneko@gmail.com', '2019-12-18', 'esta es la quinta prueba de insertar opiniones en la base de datos.'),
-(7, 7, 'isla.carlos.99@gmail.com', '2019-12-18', 'bsefndijvfkd djqNKEDLZBDK SNDASJCDBCK S<DNANLJ'),
-(9, 3, 'isla.carlos.99@gmail.com', '2019-12-19', '2. 3.');
+(7, 7, 'isla.carlos.99@gmail.com', '2019-12-18', 'Esta es la sexta prueba de insertar opiniones en la base de datos.'),
+(9, 3, 'isla.carlos.99@gmail.com', '2019-12-19', 'Esta es la novena prueba de insertar opiniones en la base de datos.');
 
 -- --------------------------------------------------------
 
@@ -350,7 +362,6 @@ CREATE TABLE `usuario` (
   `idUsuario` int(11) NOT NULL,
   `idEquipo` int(11) DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `fotoPerfil` varchar(50) NOT NULL,
   `email` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `nombreUsuario` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `admin` tinyint(1) NOT NULL
@@ -360,18 +371,18 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`idUsuario`, `idEquipo`, `password`, `fotoPerfil`, `email`, `nombreUsuario`, `admin`) VALUES
-(1, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(2, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', 'la-contraseña-es-1234', 'bogdan-apc', 1),
-(3, 3, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 'qwerty', 0),
-(5, NULL, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 1),
-(6, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(7, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(8, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(9, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(10, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(11, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', '', 0),
-(12, 2, '', '', '', '', 0);
+INSERT INTO `usuario` (`idUsuario`, `idEquipo`, `password`, `email`, `nombreUsuario`, `admin`) VALUES
+(1, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(2, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', 'la-contraseña-es-1234', 'bogdan-apc', 1),
+(3, 3, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', 'qwerty', 0),
+(5, NULL, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 1),
+(6, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(7, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(8, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(9, 1, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(10, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(11, 2, '$2y$10$jNiP5vCy4oYEkNmyBaKD6uszRLncoSRduADoQhBUYJ4LTvIX/IikG', '', '', 0),
+(12, 2, '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -385,6 +396,27 @@ CREATE TABLE `votos` (
   `idCategoria` int(11) NOT NULL,
   `idJugadorVotado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `votos`
+--
+
+INSERT INTO `votos` (`idVoto`, `idUsuario`, `idCategoria`, `idJugadorVotado`) VALUES
+(1, 7, 3, 1),
+(2, 9, 3, 1),
+(3, 3, 3, 1),
+(4, 10, 3, 1),
+(5, 5, 2, 2),
+(6, 7, 2, 2),
+(7, 1, 2, 2),
+(8, 11, 2, 2),
+(9, 6, 1, 3),
+(10, 8, 1, 3),
+(11, 2, 1, 3),
+(12, 8, 3, 4),
+(13, 11, 3, 5),
+(14, 3, 2, 6),
+(15, 10, 2, 7);
 
 --
 -- Índices para tablas volcadas
@@ -529,7 +561,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `votos`
 --
 ALTER TABLE `votos`
-  MODIFY `idVoto` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idVoto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Restricciones para tablas volcadas
